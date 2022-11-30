@@ -21,13 +21,12 @@ class CopyContentToDirectory:
 
 
 if __name__ == '__main__':
-    while True:
-        source = input('Source directory: ')
-        destination = input('Destination directory: ')
-        copy_content = CopyContentToDirectory(source, destination)
+    source = input('Source directory: ')
+    destination = input('Destination directory: ')
+    copy_content = CopyContentToDirectory(source, destination)
 
-        status = copy_content.copy()
-        if status:
-            print('Done!')
-        else:
-            print('Your operation broken!')
+    status = copy_content.copy()
+    if status:
+        print('Done!')
+    else:
+        print('Your operation broken!')
