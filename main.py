@@ -21,19 +21,22 @@ class CopyContentToDirectory:
     def add_source(self, key, source):
         """Play while impact command"""
         sources = self.__fetch_sources()
-        try:
-            # Add source to sources
-            with open(self.__PATH, 'a') as f:
-                # Add last source
-                sources[key] = source
-                # Convert to json format
-                last_sources = json.dumps(sources)
-                # Write to file path
-                f.write(last_sources)
-            return True
-        except Exception as e:
-            print(e)
-            return False
+        if sources and key not in sources.keys():
+            try:
+                # Add source to sources
+                with open(self.__PATH, 'w') as f:
+                    # Add last source
+                    sources[key] = source
+                    # Convert to json format
+                    json_format = json.dumps(sources)
+                    # Write to file path
+                    f.write(json_format)
+                return True
+            except Exception as e:
+                print(e)
+                return False
+        else:
+            print('Your key is repetitive')
 
     def __fetch_sources(self):
         """return all sources.json"""
@@ -47,7 +50,8 @@ class CopyContentToDirectory:
                 # Checkout data for load to json format
                 if data:
                     sources = json.loads(data)
-            return sources
+                    return sources
+                return False
         # If file sources not found, create file and recursive the function
         except FileNotFoundError:
             open(self.__PATH, 'w')
@@ -57,4 +61,4 @@ class CopyContentToDirectory:
 # Main running...
 if __name__ == '__main__':
     copy = CopyContentToDirectory()
-    copy.add_source('windows', 'c:\\user\\Desktop')
+    copy.add_source('linux', 'c:\\user\\Desktop')
