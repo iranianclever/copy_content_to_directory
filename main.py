@@ -7,7 +7,8 @@ class CopyContentToDirectory:
 
     def __init__(self):
         """Initialization"""
-        self.__PATH = 'sources.json'
+        self.__PATH_SOURCE = 'sources.json'
+        self.__PATH_DESTINATION = 'destinations.json'
 
     def copy(self, source, destination):
         """Copy to another"""
@@ -21,14 +22,34 @@ class CopyContentToDirectory:
     def add_source(self, key, source):
         """Play while impact command"""
         sources = self.__fetch_sources()
-        if sources and key not in sources.keys():
+        if key not in sources.keys():
             try:
                 # Add source to sources
-                with open(self.__PATH, 'w') as f:
+                with open(self.__PATH_SOURCE, 'w') as f:
                     # Add last source
                     sources[key] = source
                     # Convert to json format
                     json_format = json.dumps(sources)
+                    # Write to file path
+                    f.write(json_format)
+                return True
+            except Exception as e:
+                print(e)
+                return False
+        else:
+            print('Your key is repetitive')
+
+    def add_destination(self, key, destination):
+        """Play while impact command"""
+        destinations = self.__fetch_destinations()
+        if key not in destinations.keys():
+            try:
+                # Add destination to destinations
+                with open(self.__PATH_DESTINATION, 'w') as f:
+                    # Add last destination
+                    destinations[key] = destination
+                    # Convert to json format
+                    json_format = json.dumps(destinations)
                     # Write to file path
                     f.write(json_format)
                 return True
@@ -44,21 +65,38 @@ class CopyContentToDirectory:
             # Init sources
             sources = {}
             # Open file sources
-            with open(self.__PATH) as f:
+            with open(self.__PATH_SOURCE) as f:
                 # Load sources to data
                 data = f.read()
                 # Checkout data for load to json format
                 if data:
                     sources = json.loads(data)
-                    return sources
-                return False
+                return sources
         # If file sources not found, create file and recursive the function
         except FileNotFoundError:
-            open(self.__PATH, 'w')
+            open(self.__PATH_SOURCE, 'w')
             return self.__fetch_sources()
+
+    def __fetch_destinations(self):
+        """return all destinations.json"""
+        try:
+            # Init destinations
+            destinations = {}
+            # Open file destinations
+            with open(self.__PATH_DESTINATION) as f:
+                # Load destinations to data
+                data = f.read()
+                # Checkout data for load to json format
+                if data:
+                    destinations = json.loads(data)
+                return destinations
+        # If file destinations not found, create file and recursive the function
+        except FileNotFoundError:
+            open(self.__PATH_DESTINATION, 'w')
+            return self.__fetch_destinations()
 
 
 # Main running...
 if __name__ == '__main__':
     copy = CopyContentToDirectory()
-    copy.add_source('linux', 'c:\\user\\Desktop')
+    copy.add_destination('linux', 'c:\\user\\Desktop')
