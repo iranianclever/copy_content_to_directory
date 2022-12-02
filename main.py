@@ -10,7 +10,21 @@ class CopyContentToDirectory:
         self.__PATH_SOURCE = 'sources.json'
         self.__PATH_DESTINATION = 'destinations.json'
 
-    def copy(self, source, destination):
+    def push(self):
+        """Push all sources to destinations"""
+        sources = self.__fetch_sources()
+        desitnations = self.__fetch_destinations()
+        # Pushing all sources to destinations
+        for source in sources.values():
+            for destination in desitnations.values():
+                status = self.__copy(source, destination)
+                if status:
+                    print(f'Done! Source: {source} Destination: {destination}')
+                else:
+                    print(
+                        f'Not push! Source: {source}: Destination: {destination}')
+
+    def __copy(self, source, destination):
         """Copy to another"""
         try:
             copy_tree(source, destination)
@@ -99,4 +113,4 @@ class CopyContentToDirectory:
 # Main running...
 if __name__ == '__main__':
     copy = CopyContentToDirectory()
-    copy.add_destination('linux', 'c:\\user\\Desktop')
+    copy.push()
