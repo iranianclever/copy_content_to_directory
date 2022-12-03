@@ -109,8 +109,99 @@ class CopyContentToDirectory:
             open(self.__PATH_DESTINATION, 'w')
             return self.__fetch_destinations()
 
+    def delete_source(self, key):
+        """Delete source with key"""
+        sources = self.__fetch_sources()
+        # Checkout key with sources key
+        if key in sources.keys():
+            # Open source path
+            with open(self.__PATH_SOURCE, 'w') as f:
+                # Delete source
+                del sources[key]
+                # Convert to json format
+                json_format = json.dumps(sources)
+                # Writing to file
+                f.write(json_format)
+
+    def delete_destination(self, key):
+        """Delete destination with key"""
+        destinations = self.__fetch_destinations()
+        # Checkout key with destinations key
+        if key in destinations.keys():
+            # Open destination path
+            with open(self.__PATH_DESTINATION, 'w') as f:
+                # Delete destination
+                del destinations[key]
+                # Convert to json format
+                json_format = json.dumps(destinations)
+                # Writing to file
+                f.write(json_format)
+
+    def all_sources(self):
+        """Return all sources"""
+        sources = self.__fetch_sources()
+        format_sources = '================= Start All Sources =================\n\r'
+        for key, source in sources.items():
+            format_sources += f'{key} : {source}\n\r'
+        format_sources += '================= End All Sources ================='
+        return format_sources
+
+    def all_destinations(self):
+        """Return all destinations"""
+        destinations = self.__fetch_destinations()
+        format_destination = '================= Start All Destinations =================\n\r'
+        for key, destination in destinations.items():
+            format_destination += f'{key} {destination}\n\r'
+        format_destination += '================= End All Destinations ================='
+        return format_destination
+
 
 # Main running...
 if __name__ == '__main__':
-    copy = CopyContentToDirectory()
-    copy.push()
+    copy_content = CopyContentToDirectory()
+    command_help = """
+    as => Add source
+    ad => Add destination
+    ds => Delete source
+    dd => Delete destination
+    ss => Show sources
+    sd => Show destinations
+    p => Push sources to destinations
+    q => Quit
+    """
+    while True:
+        command = input('Enter command(Help "h" key): ')
+        command.lower()
+        if command == 'h':
+            print(command_help)
+        elif command == 'as':
+            key = input('Enter key: ')
+            source = input('Enter source: ')
+            # Add source
+            copy_content.add_source(key, source)
+        elif command == 'ad':
+            key = input('Enter key: ')
+            destination = input('Enter destination: ')
+            # Add destination
+            copy_content.add_destination(key, destination)
+        elif command == 'ds':
+            key = input('Enter key to delete source: ')
+            # Delete source
+            copy_content.delete_source(key)
+        elif command == 'dd':
+            key = input('Enter key to delete destination: ')
+            # Delete destination
+            copy_content.delete_destination(key)
+        elif command == 'ss':
+            ss = copy_content.all_sources()
+            print(ss)
+        elif command == 'sd':
+            sd = copy_content.all_destinations()
+            print(sd)
+        elif command == 'p':
+            # Push all sources to destinations
+            copy_content.push()
+        elif command == 'q':
+            # Quit
+            print('Bye')
+            break
