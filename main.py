@@ -166,7 +166,7 @@ if __name__ == '__main__':
     dd => Delete destination
     ss => Show sources
     sd => Show destinations
-    p => Push sources to destinations
+    p => Push content sources to destinations
     q => Quit
     """
     while True:
